@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a6df33a3-27e2-47b6-8a7f-6f0c00a0174f" name="Changes" comment="Feat: Created New Repository, added proper service handling and configured Swagger for controllers">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/InventoryServiceApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/AuditoriaController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/BodegaController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/MovimientoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/ProductoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/UsuarioController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/BodegaRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/MovimientoDetalleRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/MovimientoRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/ProductoRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/request/UsuarioRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/AuditoriaDetalleResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/AuditoriaResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/AuthResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/BodegaResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/MovimientoDetalleResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/MovimientoResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/ProductoResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/dto/response/UsuarioResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/exception/BusinessRuleException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/exception/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/mapper/AuditoriaMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/mapper/BodegaMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/mapper/MovimientoMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/mapper/ProductoMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/mapper/UsuarioMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/Auditoria.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/AuditoriaDetalle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/Bodega.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/DetalleMovimiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/Movimiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/Producto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/RolUsuario.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/TipoMovimiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/TipoOperacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/model/Usuario.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/AuditoriaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/BodegaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/MovimientoDetalleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/MovimientoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/ProductoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/repository/UsuarioRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/AuditoriaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/BodegaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/ContextService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/MovimientoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/ProductoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/UsuarioService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/AuditoriaServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/BodegaServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/MovimientoServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/ProductoServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/UsuarioServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/src/test/java/com/Springboot_project/inventory_service/InventoryServiceApplicationTests.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/sephty/Logitrack_SpringbootD1_Joseph.git",
+    "accountId": "5b69e58b-4244-4bf6-98a9-e5f1a7a4f119"
+  }
+}]]></component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000000187344014" />
+      <entry key="MS500" value="1.0360375802731028" />
+      <entry key="S2" value="2.1413514562905864" />
+      <entry key="S5" value="4.52624210909298" />
+      <entry key="S10" value="7.298569316146058" />
+      <entry key="S30" value="11.751305884310932" />
+      <entry key="S60" value="13.653780355048138" />
+      <entry key="M2" value="14.994280146652036" />
+      <entry key="M5" value="16.640315859549172" />
+      <entry key="M10" value="21.742417051443432" />
+      <entry key="M15" value="29.5441739217406" />
+      <entry key="M30" value="50.460311143958286" />
+      <entry key="H1" value="77.58552219883298" />
+      <entry key="H2" value="110.57292152869725" />
+      <entry key="H4" value="142.36813865254626" />
+      <entry key="D1" value="185.5759429122922" />
+      <entry key="W1" value="195.29788194621997" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.488974890671E-311" />
+      <entry key="S5" value="6.96109892553948E-125" />
+      <entry key="S10" value="1.183198825923299E-62" />
+      <entry key="S30" value="4.737843991235941E-21" />
+      <entry key="S60" value="1.9308893505143144E-10" />
+      <entry key="M2" value="5.9348182445802716E-5" />
+      <entry key="M5" value="0.18179152480373836" />
+      <entry key="M10" value="3.0479603487063724" />
+      <entry key="M15" value="7.961030050193566" />
+      <entry key="M30" value="21.23321452130673" />
+      <entry key="H1" value="36.7546834879948" />
+      <entry key="H2" value="52.36838882839551" />
+      <entry key="H4" value="65.69346908185337" />
+      <entry key="D1" value="82.64152514769752" />
+      <entry key="W1" value="86.35292892564644" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9592641374214805" />
+      <entry key="MS500" value="1.0274983954561905" />
+      <entry key="S2" value="2.137181400241492" />
+      <entry key="S5" value="4.522758677894767" />
+      <entry key="S10" value="7.2957072059531995" />
+      <entry key="S30" value="11.74970860441273" />
+      <entry key="S60" value="13.652810666465255" />
+      <entry key="M2" value="14.993705862345596" />
+      <entry key="M5" value="16.819977403753597" />
+      <entry key="M10" value="24.77592001557463" />
+      <entry key="M15" value="37.48053984064647" />
+      <entry key="M30" value="71.66115877116488" />
+      <entry key="H1" value="114.31240087793203" />
+      <entry key="H2" value="162.92147866869766" />
+      <entry key="H4" value="208.04909611772908" />
+      <entry key="D1" value="268.21481875646884" />
+      <entry key="W1" value="281.65041450324475" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3IPFN99pwNYuzfpMuuSZt1dUEIG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/garci/Downloads/inventory-service",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a6df33a3-27e2-47b6-8a7f-6f0c00a0174f" name="Changes" comment="" />
+      <created>1787658255057</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1787658255057</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat: Created New Repository, added proper service handling and configured Swagger for controllers" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Created New Repository, added proper service handling and configured Swagger for controllers" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiTrack — Panel de Operaciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- LOGIN / REGISTER SCREEN -->
+<div id="login-screen">
+    <div class="login-card">
+        <div class="login-hazard"></div>
+        <div class="login-body">
+            <div class="login-wordmark display">Logi<span>Track</span></div>
+            <div class="login-tag" id="auth-tag">Terminal de operaciones de bodega</div>
+            <div class="login-error" id="auth-error"></div>
+
+            <form id="login-form">
+                <div class="field"><label>Usuario</label><input type="text" id="login-username" required autocomplete="username"></div>
+                <div class="field"><label>Contraseña</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+                <button type="submit" class="btn btn-primary" id="login-submit">
+                    <span class="btn-label">Ingresar</span>
+                    <span class="btn-spinner" hidden></span>
+                </button>
+                <div class="toggle-auth">¿No tienes cuenta? <a id="btn-to-register">Regístrate aquí</a></div>
+            </form>
+
+            <form id="register-form" style="display:none;">
+                <div class="field"><label>Nombre Completo</label><input type="text" id="reg-nombre" required></div>
+                <div class="field"><label>Email</label><input type="email" id="reg-email" required></div>
+                <div class="field"><label>Username</label><input type="text" id="reg-username" required minlength="4" maxlength="50"></div>
+                <div class="field"><label>Contraseña</label><input type="password" id="reg-password" required minlength="6"></div>
+                <button type="submit" class="btn btn-primary" id="register-submit">
+                    <span class="btn-label">Crear cuenta</span>
+                    <span class="btn-spinner" hidden></span>
+                </button>
+                <div class="toggle-auth">¿Ya tienes cuenta? <a id="btn-to-login">Inicia sesión</a></div>
+                <p class="hint">Las cuentas creadas aquí siempre quedan como <strong>EMPLEADO</strong>.</p>
+            </form>
+
+            <details class="login-advanced">
+                <summary>Servidor de la API</summary>
+                <div class="field" style="margin-top:10px;">
+                    <input type="text" id="api-base" value="">
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app-shell">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand display">Logi<span>Track</span></div>
+        <nav>
+            <button class="nav-item active" data-section="bodegas">
+                <span class="nav-icon">◆</span> Bodegas
+            </button>
+            <button class="nav-item" data-section="productos">
+                <span class="nav-icon">▤</span> Productos
+            </button>
+            <button class="nav-item" data-section="movimientos">
+                <span class="nav-icon">⇄</span> Movimientos
+            </button>
+            <button class="nav-item" data-section="usuarios" data-admin-only="1">
+                <span class="nav-icon">◈</span> Usuarios <span class="nav-lock">🔒</span>
+            </button>
+            <button class="nav-item" data-section="auditoria" data-admin-only="1">
+                <span class="nav-icon">▦</span> Auditoría <span class="nav-lock">🔒</span>
+            </button>
+        </nav>
+        <div class="sidebar-foot">
+            <button class="btn btn-ghost btn-sm" id="logout-btn">Cerrar sesión</button>
+        </div>
+    </aside>
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" id="hamburger-btn" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-title display" id="topbar-title">Bodegas</div>
+        </div>
+        <div class="topbar-user">
+            <span class="name" id="topbar-username"></span>
+            <span class="badge" id="topbar-role-badge"></span>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- BODEGAS -->
+        <section class="section active" id="section-bodegas">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Bodegas</h2>
+                    <button class="btn btn-primary btn-sm" id="btn-nueva-bodega">+ Nueva bodega</button>
+                </div>
+                <div class="panel-body">
+                    <div class="filter-bar">
+                        <input type="text" id="bodega-filtro-nombre" placeholder="Buscar por nombre...">
+                        <button class="btn btn-sm" id="bodega-buscar">Buscar</button>
+                        <input type="text" id="bodega-filtro-ubicacion" placeholder="Buscar por ubicacion...">
+                        <button class="btn btn-sm" id="bodega-buscar-ubicacion">Ubicacion</button>
+                        <button class="btn btn-sm btn-ghost" id="bodega-limpiar">Limpiar</button>
+                    </div>
+                    <div id="bodegas-table-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTOS -->
+        <section class="section" id="section-productos">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Productos</h2>
+                    <button class="btn btn-primary btn-sm" id="btn-nuevo-producto">+ Nuevo producto</button>
+                </div>
+                <div class="panel-body">
+                    <div class="filter-bar">
+                        <input type="text" id="producto-filtro-nombre" placeholder="Buscar por nombre...">
+                        <button class="btn btn-sm" id="producto-buscar">Buscar</button>
+                        <button class="btn btn-sm btn-warn" id="producto-stock-bajo">⚠ Stock bajo</button>
+                        <select id="producto-filtro-precio-tipo" aria-label="Tipo de filtro de precio">
+                            <option value="">Filtrar por precio...</option>
+                            <option value="mayor-igual">Precio minimo</option>
+                            <option value="menor-igual">Precio maximo</option>
+                            <option value="entre">Precio entre</option>
+                            <option value="nombre-y-precio">Nombre y precio minimo</option>
+                        </select>
+                        <input type="number" id="producto-filtro-precio" min="0" step="0.01" placeholder="Precio">
+                        <input type="number" id="producto-filtro-precio-max" min="0" step="0.01" placeholder="Precio maximo" hidden>
+                        <button class="btn btn-sm" id="producto-filtrar-precio">Aplicar precio</button>
+                        <button class="btn btn-sm btn-ghost" id="producto-limpiar">Limpiar</button>
+                    </div>
+                    <div id="productos-table-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MOVIMIENTOS -->
+        <section class="section" id="section-movimientos">
+            <div class="card-grid">
+                <div class="panel">
+                    <div class="panel-header"><h3>Stock por bodega</h3></div>
+                    <div class="panel-body" id="reporte-stock-wrap"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Productos más movidos</h3></div>
+                    <div class="panel-body" id="reporte-movidos-wrap"></div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Movimientos</h2>
+                    <button class="btn btn-primary btn-sm" id="btn-nuevo-movimiento">+ Registrar movimiento</button>
+                </div>
+                <div class="panel-body">
+                    <div class="filter-bar">
+                        <label class="filter-label">Desde</label>
+                        <input type="datetime-local" id="mov-filtro-inicio">
+                        <label class="filter-label">Hasta</label>
+                        <input type="datetime-local" id="mov-filtro-fin">
+                        <button class="btn btn-sm" id="mov-filtrar-fechas">Filtrar</button>
+                        <button class="btn btn-sm btn-ghost" id="mov-limpiar">Limpiar</button>
+                    </div>
+                    <div id="movimientos-table-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USUARIOS (ADMIN) -->
+        <section class="section" id="section-usuarios">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Usuarios</h2>
+                    <button class="btn btn-primary btn-sm" id="btn-nuevo-usuario">+ Nuevo usuario</button>
+                </div>
+                <div class="panel-body">
+                    <div class="filter-bar">
+                        <input type="text" id="usuario-filtro-username" placeholder="Buscar por username exacto...">
+                        <button class="btn btn-sm" id="usuario-buscar">Buscar</button>
+                        <select id="usuario-filtro-rol">
+                            <option value="">Todos los roles</option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="EMPLEADO">EMPLEADO</option>
+                        </select>
+                        <button class="btn btn-sm" id="usuario-filtrar-rol">Filtrar</button>
+                        <button class="btn btn-sm btn-ghost" id="usuario-limpiar">Limpiar</button>
+                    </div>
+                    <div id="usuarios-table-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AUDITORIA (ADMIN) -->
+        <section class="section" id="section-auditoria">
+            <div class="panel">
+                <div class="panel-header"><h2>Auditoría</h2></div>
+                <div class="panel-body">
+                    <div class="filter-bar">
+                        <input type="number" id="audit-filtro-usuario" placeholder="Id de usuario...">
+                        <button class="btn btn-sm" id="audit-buscar-usuario">Buscar</button>
+                        <select id="audit-filtro-tipo">
+                            <option value="">Todos los tipos</option>
+                            <option value="INSERT">INSERT</option>
+                            <option value="UPDATE">UPDATE</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                        <button class="btn btn-sm" id="audit-filtrar-tipo">Filtrar</button>
+                        <button class="btn btn-sm btn-ghost" id="audit-limpiar">Limpiar</button>
+                    </div>
+                    <div id="auditoria-table-wrap"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- NOTIFICATIONS & MODALS -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header"><h3 id="modal-title"></h3><button id="modal-close">✕</button></div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer" id="modal-footer"></div>
+    </div>
+</div>
+
+<!-- Modal dedicado para el error de permisos (403) -->
+<div class="modal-backdrop" id="denied-backdrop">
+    <div class="modal modal-denied">
+        <div class="modal-body denied-body">
+            <div class="denied-icon">⛔</div>
+            <p>Error: Sus permisos son insuficientes para realizar esta acción.</p>
+            <button class="btn btn-primary" id="denied-close">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

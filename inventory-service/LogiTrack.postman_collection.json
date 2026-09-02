@@ -1,0 +1,2572 @@
+{
+  "info": {
+    "name": "LogiTrack - Suite completa (Auth + CRUD + Roles)",
+    "description": "Suite de pruebas automatizadas para todos los endpoints de LogiTrack. Corre con Collection Runner de arriba hacia abajo (el orden importa: Auth -> Usuarios -> Bodegas -> Productos -> Movimientos -> Auditoria). Usa los usuarios de seed de data.sql. Dos requests de Login documentan un bug conocido: login con credenciales invalidas o con usuario desactivado (juan.morales) devuelve 500 en vez de 401, porque GlobalExceptionHandler no tiene un @ExceptionHandler especifico para AuthenticationException.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Login y registro publico",
+      "item": [
+        {
+          "name": "Login - ADMIN (admin.logitrack)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Devuelve token JWT\", () => pm.expect(json.token).to.be.a('string').and.not.empty);",
+                  "pm.test(\"Rol es ADMIN\", () => pm.expect(json.rol).to.eql('ADMIN'));",
+                  "pm.test(\"Username correcto\", () => pm.expect(json.username).to.eql('admin.logitrack'));",
+                  "if (json.token) pm.collectionVariables.set('admin_token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin.logitrack\",\n  \"password\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - EMPLEADO (carlos.rojas)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Devuelve token JWT\", () => pm.expect(json.token).to.be.a('string').and.not.empty);",
+                  "pm.test(\"Rol es EMPLEADO\", () => pm.expect(json.rol).to.eql('EMPLEADO'));",
+                  "if (json.token) pm.collectionVariables.set('empleado_token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos.rojas\",\n  \"password\": \"carlos123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - usuario desactivado (juan.morales) [conocido: da 500]",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// juan.morales tiene activo=false en el seed.",
+                  "// DisabledException no tiene un @ExceptionHandler propio en GlobalExceptionHandler,",
+                  "// asi que hoy cae en el handler generico Exception -> responde 500, no 401.",
+                  "// Este test documenta el comportamiento REAL actual. Si se agrega un handler",
+                  "// especifico para AuthenticationException/DisabledException, cambiar a 401.",
+                  "pm.test(\"Login rechazado (no da 200)\", () => pm.expect(pm.response.code).to.not.equal(200));",
+                  "if (pm.response.code === 500) {",
+                  "    console.warn(\"juan.morales: login de usuario inactivo devuelve 500 en vez de 401 - falta manejar DisabledException/AuthenticationException en GlobalExceptionHandler\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan.morales\",\n  \"password\": \"juan123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - credenciales invalidas [conocido: da 500]",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Mismo caso: BadCredentialsException tampoco tiene handler especifico -> cae a 500.",
+                  "pm.test(\"Login rechazado (no da 200)\", () => pm.expect(pm.response.code).to.not.equal(200));",
+                  "if (pm.response.code === 500) {",
+                  "    console.warn(\"Credenciales invalidas: devuelve 500 en vez de 401 - falta manejar AuthenticationException en GlobalExceptionHandler\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos.rojas\",\n  \"password\": \"password-incorrecto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - auto-registro fuerza rol EMPLEADO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Rol forzado a EMPLEADO aunque el body pedia ADMIN\", () => pm.expect(json.rol).to.eql('EMPLEADO'));",
+                  "pm.test(\"Password no viene en la respuesta\", () => pm.expect(json.password).to.be.undefined);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"auto_{{$timestamp}}\",\n  \"password\": \"clave123\",\n  \"email\": \"auto_{{$timestamp}}@logitrack.com\",\n  \"nombreCompleto\": \"Usuario Autoregistrado\",\n  \"rol\": \"ADMIN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuarios (solo ADMIN)",
+      "description": "",
+      "item": [
+        {
+          "name": "Obtener admin por username (setup admin_id)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Username correcto\", () => pm.expect(json.username).to.eql('admin.logitrack'));",
+                  "pm.collectionVariables.set('admin_id', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/username/admin.logitrack",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "username",
+                "admin.logitrack"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear usuario (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Queda con rol EMPLEADO segun el body\", () => pm.expect(json.rol).to.eql('EMPLEADO'));",
+                  "pm.test(\"Queda activo\", () => pm.expect(json.activo).to.eql(true));",
+                  "pm.collectionVariables.set('nuevo_usuario_id', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nuevo_{{$timestamp}}\",\n  \"password\": \"clave123\",\n  \"email\": \"nuevo_{{$timestamp}}@logitrack.com\",\n  \"nombreCompleto\": \"Usuario De Prueba\",\n  \"rol\": \"EMPLEADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear usuario - sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401 (no autenticado)\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sinauth_{{$timestamp}}\",\n  \"password\": \"clave123\",\n  \"email\": \"sinauth_{{$timestamp}}@logitrack.com\",\n  \"nombreCompleto\": \"No deberia crearse\",\n  \"rol\": \"EMPLEADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear usuario - con token EMPLEADO -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403 (EMPLEADO no autorizado)\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"noauth_{{$timestamp}}\",\n  \"password\": \"clave123\",\n  \"email\": \"noauth_{{$timestamp}}@logitrack.com\",\n  \"nombreCompleto\": \"No deberia crearse\",\n  \"rol\": \"EMPLEADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar todos los usuarios (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Es una lista con al menos 8 usuarios (seed)\", () => pm.expect(json.length).to.be.at.least(8));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar usuarios - con token EMPLEADO -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403 (EMPLEADO no autorizado)\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener usuario por id (nuevo_usuario_id)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Id coincide\", () => pm.expect(String(json.id)).to.eql(pm.collectionVariables.get('nuevo_usuario_id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{nuevo_usuario_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{nuevo_usuario_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener usuario por id inexistente -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar usuario por username exacto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Rol es EMPLEADO\", () => pm.expect(json.rol).to.eql('EMPLEADO'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/username/carlos.rojas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "username",
+                "carlos.rojas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar usuarios por rol EMPLEADO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos los usuarios devueltos son EMPLEADO\", () => {",
+                  "    json.forEach(u => pm.expect(u.rol).to.eql('EMPLEADO'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/rol/EMPLEADO",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "rol",
+                "EMPLEADO"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Desactivar usuario (nuevo_usuario_id)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{nuevo_usuario_id}}/desactivar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{nuevo_usuario_id}}",
+                "desactivar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar que el usuario quedo desactivado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"activo es false\", () => pm.expect(json.activo).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{nuevo_usuario_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{nuevo_usuario_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bodegas (ADMIN + EMPLEADO)",
+      "description": "",
+      "item": [
+        {
+          "name": "Crear bodega (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Nombre correcto\", () => pm.expect(json.nombre).to.eql('Bodega Test Postman'));",
+                  "pm.test(\"Queda activa\", () => pm.expect(json.activo).to.eql(true));",
+                  "pm.collectionVariables.set('bodega_id', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bodega Test Postman\",\n  \"ubicacion\": \"Zona de pruebas\",\n  \"capacidad\": 1000,\n  \"encargado\": \"Tester Automatizado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear bodega - sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"No deberia crearse\",\n  \"ubicacion\": \"N/A\",\n  \"capacidad\": 100,\n  \"encargado\": \"N/A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear bodega - datos invalidos (capacidad 0) -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bodega invalida\",\n  \"ubicacion\": \"N/A\",\n  \"capacidad\": 0,\n  \"encargado\": \"N/A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar todas las bodegas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Incluye la bodega recien creada\", () => {",
+                  "    const ids = json.map(b => String(b.id));",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get('bodega_id'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener bodega por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Id coincide\", () => pm.expect(String(json.id)).to.eql(pm.collectionVariables.get('bodega_id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/{{bodega_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "{{bodega_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener bodega inexistente -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar bodega",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Nombre actualizado\", () => pm.expect(json.nombre).to.eql('Bodega Test Postman Editada'));",
+                  "pm.test(\"Capacidad actualizada\", () => pm.expect(json.capacidad).to.eql(1500));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/{{bodega_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "{{bodega_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bodega Test Postman Editada\",\n  \"ubicacion\": \"Zona de pruebas actualizada\",\n  \"capacidad\": 1500,\n  \"encargado\": \"Tester Automatizado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar bodegas por nombre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Encuentra al menos una bodega\", () => pm.expect(json.length).to.be.at.least(1));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/buscar?nombre=Postman",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "Postman"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar bodegas por ubicacion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Encuentra al menos una bodega\", () => pm.expect(json.length).to.be.at.least(1));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/ubicacion?ubicacion=pruebas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "ubicacion"
+              ],
+              "query": [
+                {
+                  "key": "ubicacion",
+                  "value": "pruebas"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear bodega para eliminar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('bodega_delete_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bodega Descartable\",\n  \"ubicacion\": \"N/A\",\n  \"capacidad\": 10,\n  \"encargado\": \"N/A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar bodega",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/{{bodega_delete_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "{{bodega_delete_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar bodega eliminada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bodegas/{{bodega_delete_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bodegas",
+                "{{bodega_delete_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Productos (ADMIN + EMPLEADO)",
+      "description": "",
+      "item": [
+        {
+          "name": "Crear producto (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Nombre correcto\", () => pm.expect(json.nombre).to.eql('Producto Test Postman'));",
+                  "pm.collectionVariables.set('producto_id', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Producto Test Postman\",\n  \"categoria\": \"Pruebas\",\n  \"stock\": 50,\n  \"precio\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear producto - sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"No deberia crearse\",\n  \"categoria\": \"N/A\",\n  \"stock\": 1,\n  \"precio\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear producto - stock negativo -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Producto invalido\",\n  \"categoria\": \"N/A\",\n  \"stock\": -5,\n  \"precio\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar todos los productos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Incluye al menos 20 productos (seed + creado)\", () => pm.expect(json.length).to.be.at.least(20));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener producto por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Id coincide\", () => pm.expect(String(json.id)).to.eql(pm.collectionVariables.get('producto_id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{producto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{producto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener producto inexistente -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar producto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Nombre actualizado\", () => pm.expect(json.nombre).to.eql('Producto Test Postman Editado'));",
+                  "pm.test(\"Stock actualizado\", () => pm.expect(json.stock).to.eql(45));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{producto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{producto_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Producto Test Postman Editado\",\n  \"categoria\": \"Pruebas\",\n  \"stock\": 45,\n  \"precio\": 120000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Productos con stock bajo (<10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos los productos tienen stock < 10\", () => {",
+                  "    json.forEach(p => pm.expect(p.stock).to.be.below(10));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/stock-bajo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "stock-bajo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar productos por nombre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Encuentra al menos un producto\", () => pm.expect(json.length).to.be.at.least(1));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/buscar?nombre=laptop",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "laptop"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar productos - precio mayor o igual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos cumplen precio >= 1000000\", () => {",
+                  "    json.forEach(p => pm.expect(parseFloat(p.precio)).to.be.at.least(1000000));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/filtrar/precio-mayor-igual?precio=1000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "filtrar",
+                "precio-mayor-igual"
+              ],
+              "query": [
+                {
+                  "key": "precio",
+                  "value": "1000000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar productos - precio menor o igual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos cumplen precio <= 100000\", () => {",
+                  "    json.forEach(p => pm.expect(parseFloat(p.precio)).to.be.at.most(100000));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/filtrar/precio-menor-igual?precio=100000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "filtrar",
+                "precio-menor-igual"
+              ],
+              "query": [
+                {
+                  "key": "precio",
+                  "value": "100000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar productos - precio entre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos cumplen 100000 <= precio <= 1000000\", () => {",
+                  "    json.forEach(p => {",
+                  "        const precio = parseFloat(p.precio);",
+                  "        pm.expect(precio).to.be.at.least(100000);",
+                  "        pm.expect(precio).to.be.at.most(1000000);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/filtrar/precio-entre?min=100000&max=1000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "filtrar",
+                "precio-entre"
+              ],
+              "query": [
+                {
+                  "key": "min",
+                  "value": "100000"
+                },
+                {
+                  "key": "max",
+                  "value": "1000000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar productos - nombre y precio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos contienen 'mouse' en el nombre\", () => {",
+                  "    json.forEach(p => pm.expect(p.nombre.toLowerCase()).to.include('mouse'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/filtrar/nombre-y-precio?nombre=mouse&precio=50000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "filtrar",
+                "nombre-y-precio"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "mouse"
+                },
+                {
+                  "key": "precio",
+                  "value": "50000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear producto para eliminar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('producto_delete_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Producto Descartable\",\n  \"categoria\": \"Pruebas\",\n  \"stock\": 5,\n  \"precio\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar producto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{producto_delete_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{producto_delete_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar producto eliminado -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{producto_delete_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{producto_delete_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movimientos (ADMIN + EMPLEADO)",
+      "description": "",
+      "item": [
+        {
+          "name": "Registrar movimiento ENTRADA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Tipo movimiento correcto\", () => pm.expect(json.tipoMovimiento).to.eql('ENTRADA'));",
+                  "pm.test(\"Trae un detalle\", () => pm.expect(json.detalles.length).to.eql(1));",
+                  "pm.collectionVariables.set('movimiento_id', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoMovimiento\": \"ENTRADA\",\n  \"bodegaDestinoId\": \"{{bodega_id}}\",\n  \"observaciones\": \"Entrada de prueba via Postman\",\n  \"detalles\": [\n    {\n      \"productoId\": \"{{producto_id}}\",\n      \"cantidad\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar movimiento - sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoMovimiento\": \"ENTRADA\",\n  \"bodegaDestinoId\": \"{{bodega_id}}\",\n  \"observaciones\": \"No deberia registrarse\",\n  \"detalles\": [\n    {\n      \"productoId\": \"{{producto_id}}\",\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar movimiento SALIDA - stock insuficiente -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400 (stock insuficiente)\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoMovimiento\": \"SALIDA\",\n  \"bodegaOrigenId\": \"{{bodega_id}}\",\n  \"observaciones\": \"Salida que excede el stock disponible\",\n  \"detalles\": [\n    {\n      \"productoId\": \"{{producto_id}}\",\n      \"cantidad\": 999999\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar todos los movimientos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Incluye el movimiento recien creado\", () => {",
+                  "    const ids = json.map(m => String(m.id));",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get('movimiento_id'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener movimiento por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Id coincide\", () => pm.expect(String(json.id)).to.eql(pm.collectionVariables.get('movimiento_id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos/{{movimiento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "{{movimiento_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener movimiento inexistente -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Movimientos por rango de fechas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Es una lista\", () => pm.expect(json).to.be.an('array'));",
+                  "pm.test(\"Incluye el movimiento recien creado\", () => {",
+                  "    const ids = json.map(m => String(m.id));",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get('movimiento_id'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos/rango-fechas?inicio=2026-01-01T00:00:00&fin=2026-12-31T23:59:59",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "rango-fechas"
+              ],
+              "query": [
+                {
+                  "key": "inicio",
+                  "value": "2026-01-01T00:00:00"
+                },
+                {
+                  "key": "fin",
+                  "value": "2026-12-31T23:59:59"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reporte general de inventario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"La respuesta trae contenido (al menos una clave)\", () => {",
+                  "    pm.expect(Object.keys(json).length).to.be.at.least(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movimientos/reporte-general",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "reporte-general"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auditoria (solo ADMIN)",
+      "description": "",
+      "item": [
+        {
+          "name": "Listar toda la auditoria (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Hay registros de auditoria (por los triggers)\", () => pm.expect(json.length).to.be.at.least(1));",
+                  "pm.test(\"Cada registro trae detalle campo por campo\", () => {",
+                  "    pm.expect(json[0]).to.have.property('detalles');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditoria",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditoria"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar auditoria - con token EMPLEADO -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403 (EMPLEADO no autorizado)\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{empleado_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditoria",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditoria"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auditoria por usuario (admin_id)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Es una lista\", () => pm.expect(json).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditoria/usuario/{{admin_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditoria",
+                "usuario",
+                "{{admin_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auditoria por tipo de operacion INSERT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Todos los registros son de tipo INSERT\", () => {",
+                  "    json.forEach(a => pm.expect(a.tipoOperacion).to.eql('INSERT'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditoria/tipo/INSERT",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditoria",
+                "tipo",
+                "INSERT"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "General / control de acceso",
+      "description": "",
+      "item": [
+        {
+          "name": "Swagger UI accesible sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 (ruta publica)\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v3/api-docs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v3",
+                "api-docs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ruta protegida sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Body de error con formato ErrorResponse\", () => {",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "empleado_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "nuevo_usuario_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bodega_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bodega_delete_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "producto_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "producto_delete_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "movimiento_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

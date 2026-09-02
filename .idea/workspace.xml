@@ -4,32 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6df33a3-27e2-47b6-8a7f-6f0c00a0174f" name="Changes" comment="Fix: Configured JWT service and pasword encoder, ensuring it works with an automated 24 tests using postman. Frontend left needed">
-      <change afterPath="$PROJECT_DIR$/inventory-service/Postman.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/config/OpenApiConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/security/CustomUserDetails.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/security/CustomUserDetailsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/security/JwtService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/security/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/static/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/static/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="a6df33a3-27e2-47b6-8a7f-6f0c00a0174f" name="Changes" comment="Feat: Created frontendlayout and some of the working Endpoints (Bodega and productos)">
+      <change afterPath="$PROJECT_DIR$/inventory-service/JWT_explicacion.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventory-service/LogiTrack.postman_collection.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/AuditoriaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/AuditoriaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/BodegaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/BodegaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/MovimientoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/MovimientoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/ProductoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/ProductoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/controller/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/BodegaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/BodegaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/ProductoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/ProductoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/UsuarioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/BodegaServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/BodegaServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/ProductoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/ProductoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/UsuarioServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/com/Springboot_project/inventory_service/service/impl/UsuarioServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventory-service/Postman.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/resources/static/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,61 +57,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0004723028953193" />
-      <entry key="S2" value="1.147419574032652" />
-      <entry key="S5" value="1.4649669250416433" />
-      <entry key="S10" value="1.6818965824297374" />
-      <entry key="S30" value="1.9358232874779528" />
-      <entry key="S60" value="2.7284468516283393" />
-      <entry key="M2" value="5.49325486387922" />
-      <entry key="M5" value="16.16848385293618" />
-      <entry key="M10" value="33.11573178739403" />
-      <entry key="M15" value="46.022428684825506" />
-      <entry key="M30" value="74.91145234922102" />
-      <entry key="H1" value="113.87240290286836" />
-      <entry key="H2" value="160.31997088588105" />
-      <entry key="H4" value="204.98460968953776" />
-      <entry key="D1" value="267.1872741100775" />
-      <entry key="W1" value="281.4849520002454" />
+      <entry key="MS100" value="1.9952897722373435" />
+      <entry key="MS500" value="5.379722083646889" />
+      <entry key="S2" value="7.791520054162898" />
+      <entry key="S5" value="8.484787096422874" />
+      <entry key="S10" value="8.878855121813155" />
+      <entry key="S30" value="16.458367797998786" />
+      <entry key="S60" value="29.570350128770883" />
+      <entry key="M2" value="45.837314212255535" />
+      <entry key="M5" value="104.52396999435791" />
+      <entry key="M10" value="218.6538973214633" />
+      <entry key="M15" value="304.64289444801875" />
+      <entry key="M30" value="451.0929849235999" />
+      <entry key="H1" value="577.1602971357437" />
+      <entry key="H2" value="680.3106794620335" />
+      <entry key="H4" value="759.9836896985666" />
+      <entry key="D1" value="858.5879059842002" />
+      <entry key="W1" value="880.2210576373259" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.2892601864813174E-99" />
-      <entry key="S2" value="2.2288190373163416E-25" />
-      <entry key="S5" value="1.7823785058246575E-10" />
-      <entry key="S10" value="2.07665820015358E-5" />
-      <entry key="S30" value="0.055776424136088874" />
-      <entry key="S60" value="0.4078398066507001" />
-      <entry key="M2" value="1.1053184802614948" />
-      <entry key="M5" value="2.0128911848468376" />
-      <entry key="M10" value="2.5652546390791753" />
-      <entry key="M15" value="3.414923437616275" />
-      <entry key="M30" value="9.376116031133614" />
-      <entry key="H1" value="23.41246421177722" />
-      <entry key="H2" value="42.28166014099075" />
-      <entry key="H4" value="60.228018389912286" />
-      <entry key="D1" value="84.53620005476313" />
-      <entry key="W1" value="90.03541217124136" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="4.61831028612467E-295" />
+      <entry key="S5" value="2.385411211152434E-118" />
+      <entry key="S10" value="2.4024075344481305E-59" />
+      <entry key="S30" value="5.855238024974398E-20" />
+      <entry key="S60" value="4.178655378560802E-10" />
+      <entry key="M2" value="3.538025045105098E-5" />
+      <entry key="M5" value="0.03205750263252067" />
+      <entry key="M10" value="0.3237316613476851" />
+      <entry key="M15" value="0.859179884983788" />
+      <entry key="M30" value="4.702995226675902" />
+      <entry key="H1" value="16.581465395633334" />
+      <entry key="H2" value="35.58278383010013" />
+      <entry key="H4" value="55.2513024175651" />
+      <entry key="D1" value="83.32974377402066" />
+      <entry key="W1" value="89.85071682469801" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.27932178451805495" />
-      <entry key="MS500" value="0.7752353290396324" />
-      <entry key="S2" value="1.0777853167484928" />
-      <entry key="S5" value="1.4297080311652" />
-      <entry key="S10" value="1.6618162722190035" />
-      <entry key="S30" value="1.982847598433527" />
-      <entry key="S60" value="3.125118560310655" />
-      <entry key="M2" value="6.582564367131121" />
-      <entry key="M5" value="18.166856721386445" />
-      <entry key="M10" value="35.67008721798709" />
-      <entry key="M15" value="49.426707534888216" />
-      <entry key="M30" value="84.27231003826202" />
-      <entry key="H1" value="137.26622924718154" />
-      <entry key="H2" value="202.5850042579749" />
-      <entry key="H4" value="265.2008078967166" />
-      <entry key="D1" value="351.7206999144205" />
-      <entry key="W1" value="371.51994158192986" />
+      <entry key="MS100" value="1.9149134564103312" />
+      <entry key="MS500" value="5.340000997398413" />
+      <entry key="S2" value="7.77715552245143" />
+      <entry key="S5" value="8.478521490670415" />
+      <entry key="S10" value="8.875567592151834" />
+      <entry key="S30" value="16.456202350473443" />
+      <entry key="S60" value="29.568324513869243" />
+      <entry key="M2" value="45.83561849043694" />
+      <entry key="M5" value="104.55376305892969" />
+      <entry key="M10" value="218.97403945313098" />
+      <entry key="M15" value="305.4973675480257" />
+      <entry key="M30" value="455.78689474474737" />
+      <entry key="H1" value="593.7277040102559" />
+      <entry key="H2" value="715.8789996564069" />
+      <entry key="H4" value="815.2239017504487" />
+      <entry key="D1" value="941.9148722953865" />
+      <entry key="W1" value="970.0713465827207" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -148,40 +129,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript Debug.index.html (1).executor": "Run",
-    "JavaScript Debug.index.html.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.InventoryServiceApplication.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/garci/Downloads/inventory-service",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;JavaScript Debug.index.html (1).executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.index.html.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.InventoryServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/garci/Downloads/inventory-service&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="JavaScript Debug.index.html (1)">
-    <configuration name="index.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/inventory-service/static/index.html" useBuiltInWebServerPort="true">
-      <method v="2" />
-    </configuration>
-    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/inventory-service/static/js/index.html" useBuiltInWebServerPort="true">
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\garci\Downloads\inventory-service\inventory-service" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.index.html">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/inventory-service/static/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <configuration name="InventoryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
@@ -200,7 +183,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.index.html (1)" />
         <item itemvalue="JavaScript Debug.index.html" />
         <item itemvalue="Spring Boot.InventoryServiceApplication" />
       </list>
@@ -231,7 +213,8 @@
     <MESSAGE value="Feat: Created New Repository, added proper service handling and configured Swagger for controllers" />
     <MESSAGE value="Fix: Added proper Swagger version. currently checking for a 500 error within producto creation" />
     <MESSAGE value="Fix: Configured JWT service and pasword encoder, ensuring it works with an automated 24 tests using postman. Frontend left needed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: Configured JWT service and pasword encoder, ensuring it works with an automated 24 tests using postman. Frontend left needed" />
+    <MESSAGE value="Feat: Created frontendlayout and some of the working Endpoints (Bodega and productos)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Created frontendlayout and some of the working Endpoints (Bodega and productos)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

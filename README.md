@@ -286,7 +286,8 @@ Incluye login y registro, navegación lateral por secciones, control visual por 
 ### Base de datos
 
 1. Crea la base de datos MySQL usando [schema](schema.sql) y [data.sql](data.sql). ! Puede que el usuario en auditoria de null ya que los datos no accionan los eventos del trigger, para ver simplemente tienes que usar un endpoint ya autenticado.
-2. Configura usuario, contraseña y demás parámetros en `inventory-service/src/main/resources/application.properties`.
+2. Configura usuario, contraseña y demás parámetros en `inventory-service/src/main/resources/application.properties`. puedes usar ```py -c "import secrets; print(secrets.token_urlsafe(48))"``` para el jwt secret.
+
 3. Asegúrate de que las tablas y usuarios de prueba existan antes de iniciar la aplicación.
 
 Este checkout no incluye actualmente archivos `schema.sql` ni `data.sql`; por ello, la creación de tablas y la carga de datos deben realizarse con el esquema disponible en tu entorno.

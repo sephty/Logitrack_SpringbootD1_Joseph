@@ -7,10 +7,13 @@ import com.Springboot_project.inventory_service.mapper.UsuarioMapper;
 import com.Springboot_project.inventory_service.model.RolUsuario;
 import com.Springboot_project.inventory_service.model.Usuario;
 import com.Springboot_project.inventory_service.repository.UsuarioRepository;
+import com.Springboot_project.inventory_service.service.ContextService;
 import com.Springboot_project.inventory_service.service.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,9 +23,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final ContextService contextService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UsuarioResponse registrar(UsuarioRequest dto) {
+    @Transactional
+    public UsuarioResponse registrar(UsuarioRequest dto, Long usuarioIdCreador) {
         if (usuarioRepository.existsByUsername(dto.getUsername())) {
             throw new BusinessRuleException("El username ya esta en uso");
         }
@@ -30,16 +36,18 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new BusinessRuleException("El email ya esta en uso");
         }
 
+        // usuarioIdCreador puede ser null en el primer registro (bootstrap del admin inicial),
+        // ya que aun no existe nadie autenticado para crearlo.
+        contextService.setUsuarioActual(usuarioIdCreador);
+
         Usuario usuario = usuarioMapper.dtoToEntity(dto);
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         return usuarioMapper.entityToDto(usuarioRepository.save(usuario));
     }
 
     @Override
     public List<UsuarioResponse> obtenerTodas() {
-        return usuarioRepository.findAll()
-                .stream()
-                .map(usuarioMapper::entityToDto)
-                .toList();
+        return usuarioRepository.findAll().stream().map(usuarioMapper::entityToDto).toList();
     }
 
     @Override
@@ -48,7 +56,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void desactivarUsuario(Long id) {
+    @Transactional
+    public void desactivarUsuario(Long id, Long usuarioIdEjecutor) {
+        contextService.setUsuarioActual(usuarioIdEjecutor);
         Usuario usuario = buscarUsuario(id);
         usuario.setActivo(false);
         usuarioRepository.save(usuario);
@@ -63,10 +73,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<UsuarioResponse> buscarPorRol(RolUsuario rol) {
-        return usuarioRepository.findByRol(rol)
-                .stream()
-                .map(usuarioMapper::entityToDto)
-                .toList();
+        return usuarioRepository.findByRol(rol).stream().map(usuarioMapper::entityToDto).toList();
     }
 
     private Usuario buscarUsuario(Long id) {

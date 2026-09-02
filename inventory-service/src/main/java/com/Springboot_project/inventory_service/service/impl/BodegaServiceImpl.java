@@ -6,9 +6,11 @@ import com.Springboot_project.inventory_service.mapper.BodegaMapper;
 import com.Springboot_project.inventory_service.model.Bodega;
 import com.Springboot_project.inventory_service.repository.BodegaRepository;
 import com.Springboot_project.inventory_service.service.BodegaService;
+import com.Springboot_project.inventory_service.service.ContextService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,19 +20,19 @@ public class BodegaServiceImpl implements BodegaService {
 
     private final BodegaRepository bodegaRepository;
     private final BodegaMapper bodegaMapper;
+    private final ContextService contextService;
 
     @Override
-    public BodegaResponse guardar(BodegaRequest dto) {
+    @Transactional
+    public BodegaResponse guardar(BodegaRequest dto, Long usuarioId) {
+        contextService.setUsuarioActual(usuarioId);
         Bodega bodega = bodegaMapper.dtoToEntity(dto);
         return bodegaMapper.entityToDto(bodegaRepository.save(bodega));
     }
 
     @Override
     public List<BodegaResponse> obtenerTodas() {
-        return bodegaRepository.findAll()
-                .stream()
-                .map(bodegaMapper::entityToDto)
-                .toList();
+        return bodegaRepository.findAll().stream().map(bodegaMapper::entityToDto).toList();
     }
 
     @Override
@@ -39,31 +41,29 @@ public class BodegaServiceImpl implements BodegaService {
     }
 
     @Override
-    public BodegaResponse actualizarBodega(Long id, BodegaRequest dto) {
+    @Transactional
+    public BodegaResponse actualizarBodega(Long id, BodegaRequest dto, Long usuarioId) {
+        contextService.setUsuarioActual(usuarioId);
         Bodega bodega = buscarBodega(id);
         bodegaMapper.updateEntityToDto(bodega, dto);
         return bodegaMapper.entityToDto(bodegaRepository.save(bodega));
     }
 
     @Override
-    public void eliminarBodega(Long id) {
+    @Transactional
+    public void eliminarBodega(Long id, Long usuarioId) {
+        contextService.setUsuarioActual(usuarioId);
         bodegaRepository.delete(buscarBodega(id));
     }
 
     @Override
     public List<BodegaResponse> buscarPorNombre(String nombre) {
-        return bodegaRepository.findByNombreContainingIgnoreCase(nombre)
-                .stream()
-                .map(bodegaMapper::entityToDto)
-                .toList();
+        return bodegaRepository.findByNombreContainingIgnoreCase(nombre).stream().map(bodegaMapper::entityToDto).toList();
     }
 
     @Override
     public List<BodegaResponse> buscarPorUbicacion(String ubicacion) {
-        return bodegaRepository.findByUbicacionContainingIgnoreCase(ubicacion)
-                .stream()
-                .map(bodegaMapper::entityToDto)
-                .toList();
+        return bodegaRepository.findByUbicacionContainingIgnoreCase(ubicacion).stream().map(bodegaMapper::entityToDto).toList();
     }
 
     private Bodega buscarBodega(Long id) {

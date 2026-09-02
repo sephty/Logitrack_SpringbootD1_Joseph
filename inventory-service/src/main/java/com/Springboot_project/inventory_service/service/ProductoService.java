@@ -7,11 +7,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductoService {
-    ProductoResponse guardar(ProductoRequest dto);
+    ProductoResponse guardar(ProductoRequest dto, Long usuarioId);
     List<ProductoResponse> obtenerTodas();
     ProductoResponse obtenerPorId(Long id);
-    ProductoResponse actualizarProducto(Long id, ProductoRequest dto);
-    void eliminarProducto(Long id);
+    ProductoResponse actualizarProducto(Long id, ProductoRequest dto, Long usuarioId);
+    void eliminarProducto(Long id, Long usuarioId);
     List<ProductoResponse> buscarPorNombre(String nombre);
     List<ProductoResponse> filtrarPrecioVentaMayorOIgualQue(BigDecimal precio);
     List<ProductoResponse> filtrarPrecioVentaMenorOIgualQue(BigDecimal precio);
